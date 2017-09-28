@@ -15,6 +15,10 @@ import java.util.ArrayList;
 
 public class EarthquakeAdapter extends ArrayAdapter<Earthquake> {
 
+    private final String LOCATION_SEPERATOR = " of ";
+    private String locationOffset;
+    private String primaryLocation;
+
     public EarthquakeAdapter(Context context, ArrayList<Earthquake> earthquakeArrayList) {
         super(context, 0, earthquakeArrayList);
     }
@@ -35,11 +39,28 @@ public class EarthquakeAdapter extends ArrayAdapter<Earthquake> {
         TextView magnitudeTextView = (TextView) listItemView.findViewById(R.id.magnitude_text_view);
         magnitudeTextView.setText(earthquakeAdapterItem.getMagnitude());
 
-        TextView locationTextView = (TextView) listItemView.findViewById(R.id.location_text_view);
-        locationTextView.setText(earthquakeAdapterItem.getLocation());
+        String originalLocation = earthquakeAdapterItem.getLocation();
+
+        if (originalLocation.contains(LOCATION_SEPERATOR)) {
+            String[] locationArray = originalLocation.split(LOCATION_SEPERATOR);
+            locationOffset = locationArray[0] + LOCATION_SEPERATOR;
+            primaryLocation = locationArray[1];
+        } else {
+            locationOffset = getContext().getString(R.string.near_the);
+            primaryLocation = originalLocation;
+        }
+
+        TextView primaryLocationTextView = (TextView) listItemView.findViewById(R.id.primary_location_text_view);
+        primaryLocationTextView.setText(primaryLocation);
+
+        TextView locationOffsetTextView = (TextView) listItemView.findViewById(R.id.location_offset_text_view);
+        locationOffsetTextView.setText(locationOffset);
 
         TextView dateTextView = (TextView) listItemView.findViewById(R.id.date_text_view);
-        dateTextView.setText(earthquakeAdapterItem.getDate());
+        dateTextView.setText(earthquakeAdapterItem.formatDate());
+
+        TextView timeTextView = (TextView) listItemView.findViewById(R.id.time_text_view);
+        timeTextView.setText(earthquakeAdapterItem.formatTime());
 
         return listItemView;
     }

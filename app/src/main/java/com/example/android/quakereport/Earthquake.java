@@ -10,13 +10,13 @@ public class Earthquake {
 
     private double mMagnitude;
     private String mLocation;
-    private long mDate;
+    private long mTimeInMilliseconds;
 
-    public Earthquake(double magnitude, String location, long date) {
+    public Earthquake(double magnitude, String location, long timeInMilliseconds) {
 
         mMagnitude = magnitude;
         mLocation = location;
-        mDate = date;
+        mTimeInMilliseconds = timeInMilliseconds;
     }
 
     public String getMagnitude() {
@@ -28,10 +28,19 @@ public class Earthquake {
         return mLocation;
     }
 
-    public String getDate() {
-        mDate = System.currentTimeMillis();
-        SimpleDateFormat sdf = new SimpleDateFormat("MMM dd, yyyy");
-        String dateString = sdf.format(mDate);
+    public String formatDate() {
+
+        //Date date = new Date(mDate);
+        SimpleDateFormat sdf = new SimpleDateFormat("MMM DD, YYYY"); //(SimpleDateFormat) DateFormat.getDateTimeInstance();
+        String dateString = sdf.format(mTimeInMilliseconds /*date*/);
         return dateString;
+    }
+
+    public String formatTime() {
+
+        //Date date = new Date(mDate);
+        SimpleDateFormat sdf = new SimpleDateFormat("h:mm a"); //(SimpleDateFormat) DateFormat.getDateTimeInstance();
+        String timeString = sdf.format(mTimeInMilliseconds /*date*/);
+        return timeString;
     }
 }
