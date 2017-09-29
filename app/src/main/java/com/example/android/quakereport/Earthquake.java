@@ -8,20 +8,21 @@ import java.text.SimpleDateFormat;
 
 public class Earthquake {
 
+    String mUrl;
     private double mMagnitude;
     private String mLocation;
     private long mTimeInMilliseconds;
 
-    public Earthquake(double magnitude, String location, long timeInMilliseconds) {
+    public Earthquake(double magnitude, String location, long timeInMilliseconds, String url) {
 
         mMagnitude = magnitude;
         mLocation = location;
         mTimeInMilliseconds = timeInMilliseconds;
+        mUrl = url;
     }
 
-    public String getMagnitude() {
-        String magnitudeString = "" + mMagnitude;
-        return magnitudeString;
+    public double getMagnitude() {
+        return mMagnitude;
     }
 
     public String getLocation() {
@@ -29,7 +30,6 @@ public class Earthquake {
     }
 
     public String formatDate() {
-
         //Date date = new Date(mDate);
         SimpleDateFormat sdf = new SimpleDateFormat("MMM DD, YYYY"); //(SimpleDateFormat) DateFormat.getDateTimeInstance();
         String dateString = sdf.format(mTimeInMilliseconds /*date*/);
@@ -37,10 +37,13 @@ public class Earthquake {
     }
 
     public String formatTime() {
-
         //Date date = new Date(mDate);
         SimpleDateFormat sdf = new SimpleDateFormat("h:mm a"); //(SimpleDateFormat) DateFormat.getDateTimeInstance();
         String timeString = sdf.format(mTimeInMilliseconds /*date*/);
         return timeString;
+    }
+
+    public String getUrl() {
+        return mUrl;
     }
 }
