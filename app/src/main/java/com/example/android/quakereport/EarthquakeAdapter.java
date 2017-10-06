@@ -10,7 +10,7 @@ import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
 import java.text.DecimalFormat;
-import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by Rean on 9/27/2017.
@@ -22,7 +22,7 @@ public class EarthquakeAdapter extends ArrayAdapter<Earthquake> {
     private String locationOffset;
     private String primaryLocation;
 
-    public EarthquakeAdapter(Context context, ArrayList<Earthquake> earthquakeArrayList) {
+    public EarthquakeAdapter(Context context, List<Earthquake> earthquakeArrayList) {
         super(context, 0, earthquakeArrayList);
     }
 
