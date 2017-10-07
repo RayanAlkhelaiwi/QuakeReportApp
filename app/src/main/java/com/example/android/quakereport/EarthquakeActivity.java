@@ -20,12 +20,15 @@ import android.content.AsyncTaskLoader;
 import android.content.Context;
 import android.content.Intent;
 import android.content.Loader;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -39,7 +42,7 @@ public class EarthquakeActivity extends AppCompatActivity implements LoaderManag
      * JSON response for a USGS API
      */
     private static final String JSON_RESPONSE_URL =
-            "https://earthquake.usgs.gov/fdsnws/event/1/query?format=geojson&eventtype=earthquake&orderby=time&limit=25&minmag=3";
+            "https://earthquake.usgs.gov/fdsnws/event/1/query?format=geojson&eventtype=earthquake&orderby=time&minmag=5&limit=10";
     /**
      * Adapter for the list of earthquakes
      */
@@ -59,6 +62,7 @@ public class EarthquakeActivity extends AppCompatActivity implements LoaderManag
         // Set the adapter on the {@link ListView}
         // so the list can be populated in the user interface
         earthquakeListView.setAdapter(mAdapter);
+        earthquakeListView.setEmptyView(findViewById(android.R.id.empty));
 
         // Set an item click listener on the ListView, which sends an intent to a web browser
         // to open a website with more information about the selected earthquake.
@@ -79,13 +83,25 @@ public class EarthquakeActivity extends AppCompatActivity implements LoaderManag
             }
         });
 
-// Get a reference to the LoaderManager, in order to interact with loaders.
-        LoaderManager loaderManager = getLoaderManager();
+        ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
 
-        // Initialize the loader. Pass in the int ID constant defined above and pass in null for
-        // the bundle. Pass in this activity for the LoaderCallbacks parameter (which is valid
-        // because this activity implements the LoaderCallbacks interface).
-        loaderManager.initLoader(EARTHQUAKE_LOADER_ID, null, this);
+        if (activeNetwork != null && activeNetwork.isConnected()) {
+
+            // Get a reference to the LoaderManager, in order to interact with loaders.
+            LoaderManager loaderManager = getLoaderManager();
+
+            // Initialize the loader. Pass in the int ID constant defined above and pass in null for
+            // the bundle. Pass in this activity for the LoaderCallbacks parameter (which is valid
+            // because this activity implements the LoaderCallbacks interface).
+            loaderManager.initLoader(EARTHQUAKE_LOADER_ID, null, this);
+        } else {
+            View progressBar = findViewById(R.id.progress_bar);
+            progressBar.setVisibility(View.GONE);
+
+            TextView emptyTextView = (TextView) findViewById(android.R.id.empty);
+            emptyTextView.setText(R.string.no_internet);
+        }
     }
 
     @Override
@@ -95,6 +111,13 @@ public class EarthquakeActivity extends AppCompatActivity implements LoaderManag
 
     @Override
     public void onLoadFinished(Loader<List<Earthquake>> loader, List<Earthquake> data) {
+
+        View progressBar = findViewById(R.id.progress_bar);
+        progressBar.setVisibility(View.GONE);
+
+        TextView emptyTextView = (TextView) findViewById(android.R.id.empty);
+        emptyTextView.setText(R.string.empty_view_text);
+
         // Clear the adapter of previous earthquake data
         mAdapter.clear();
 
